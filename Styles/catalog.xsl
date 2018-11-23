@@ -1,11 +1,13 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <xsl:template match="/">
-        <a class="navbar-brand" href="#">Navbar</a>
+        <a class="navbar-brand" href="#">Home</a>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
                 <xsl:for-each select="catalog/category">
                     <xsl:variable name="parentName" select="@name"/>                    
-                    <li >                       
+                    <li >  
+                        
+                        <xsl:attribute name="id"><xsl:value-of select="@catalog_id"/></xsl:attribute>                     
                         <xsl:attribute name="class">nav-item <xsl:choose>
                                 <xsl:when test="((category)[1]/@catalog_id &gt; 0)"> dropdown </xsl:when>
                             </xsl:choose>
@@ -36,7 +38,7 @@
                         </a>                            
                         <products style="display:none;">
                             <xsl:attribute name="id"><xsl:value-of select="@catalog_id"/></xsl:attribute>
-                            <xsl:for-each select="product">
+                            <xsl:for-each select="descendant-or-self::product">
                                 <item><xsl:attribute name="data-sortorder"><xsl:value-of select="@sort_order"/></xsl:attribute><xsl:value-of select="@style_sid"/></item>
                             </xsl:for-each>
                         </products>
@@ -52,7 +54,13 @@
                                         <xsl:value-of select="@catalog_id"/>
                                     </xsl:attribute>
                                     <xsl:value-of select="$currentName"/>
-                                </a>
+                                </a>                                                    
+                                <products style="display:none;">
+                                    <xsl:attribute name="id"><xsl:value-of select="@catalog_id"/></xsl:attribute>
+                                    <xsl:for-each select="descendant-or-self::product">
+                                        <item><xsl:attribute name="data-sortorder"><xsl:value-of select="@sort_order"/></xsl:attribute><xsl:value-of select="@style_sid"/></item>
+                                    </xsl:for-each>
+                                </products>
                             </xsl:for-each>
                         </div>
                     </li>

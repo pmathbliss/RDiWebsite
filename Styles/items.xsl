@@ -9,7 +9,16 @@
       <xsl:variable name="diff" select="$minPrice - $minSalePrice"/>
       <xsl:variable name="isOnSale" select="($minSalePrice &gt; 0) and ($minSalePrice &lt; $minPrice)"/>
       <xsl:variable name="sellWhen" select="@Avail"/>     
-      
+      <xsl:attribute name="data-productname">
+        <xsl:value-of select="@ProductName"/>
+      </xsl:attribute>   
+      <xsl:attribute name="data-longdesc">
+        <xsl:value-of select="@LongDesc"/>
+      </xsl:attribute>
+      <xsl:attribute name="data-sku">
+        <xsl:value-of select="@Desc2"/>
+      </xsl:attribute>
+     
       <xsl:attribute name="avail">
         <xsl:value-of select="$sellWhen"/>
       </xsl:attribute>
@@ -18,7 +27,7 @@
       </xsl:attribute>
       <div class="product-grid">
           <div class="product-image">
-              <a href="#">
+              <a href="#" >                
                   <img class="pic-1" src="http://bestjquery.com/tutorial/product-grid/demo3/images/img-3.jpeg"/>
                   <img class="pic-2" src="http://bestjquery.com/tutorial/product-grid/demo3/images/img-4.jpeg"/>
               </a>
@@ -42,22 +51,20 @@
               <li class="fa fa-star disable"></li>
           </ul>
           <div class="product-content">
-              <h3 class="title"><a href="#"><xsl:value-of select="@ProductName"/></a></h3>
+              <h3 class="title"><a href="#" onclick="openProduct(this);"><xsl:value-of select="@ProductName"/></a></h3>
               <div class="sku"><xsl:value-of select="@Desc2"/></div>
               <div class="price">              
                 <xsl:choose>
-                  <xsl:when test="$isOnSale">                  
-                    $<xsl:value-of select="$minSalePrice"/>
+                  <xsl:when test="$isOnSale">$<xsl:value-of select="$minSalePrice"/>
                     <span>$<xsl:value-of select="$minPrice"/></span>
                   </xsl:when>
-                  <xsl:otherwise>
-                    $<xsl:value-of select="$minPrice"/>
+                  <xsl:otherwise>$<xsl:value-of select="$minPrice"/>
                   </xsl:otherwise>
                 </xsl:choose>
               </div>   
-              <div class="options">             
-                <label for="options">Options</label>
-                <select name="options" >            
+              <div class="options ">             
+                <h5 for="options">Options</h5>
+                <select class="custom-select" name="options" onchange="optionSelected(this);" >            
                   <xsl:for-each select="Item">  
                     <xsl:sort select="@Attr" /> 
                     <xsl:sort select="@SizeOrder" />           
@@ -77,21 +84,21 @@
                       <xsl:attribute name="value">
                         <xsl:value-of select="@ALU"/>
                       </xsl:attribute>
+                      <xsl:attribute name="quantity">
+                        <xsl:value-of select="@Quantity"/>
+                      </xsl:attribute>
                       <em class="attr"> <xsl:value-of select="@Attr"/> </em>
-                      <em class="size"> <xsl:value-of select="@Size"/> </em>                                          
-                      <xsl:choose>
-                        <xsl:when test="@Quantity > 0">
-                          <em> In-Stock </em>
+                      <em class="size"> <xsl:value-of select="@Size"/> </em> <xsl:choose>
+                        <xsl:when test="@Quantity > 0"> <em> (In Stock) </em>
                         </xsl:when>
-                        <xsl:otherwise>
-                          <em> Out-Stock </em>
+                        <xsl:otherwise> <em> (Out of Stock) </em>
                         </xsl:otherwise>
                       </xsl:choose>  
                     </option>
                   </xsl:for-each>
                 </select>
               </div>
-              <a class="add-to-cart" href="">+ Add To Cart</a>
+              <button class="btn btn-light add-to-cart" title="Add to Cart"> Add To Cart</button>
           </div>
       </div>
   </div>
