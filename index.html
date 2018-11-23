@@ -3,8 +3,6 @@
 <head>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"/>
     <link href="./css/style.css" rel="stylesheet" />
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
         function loadXMLDoc(filename) {
             if (window.ActiveXObject) {
@@ -19,31 +17,64 @@
             return xhttp.responseXML;
         }
 
-        function displayResult() {
-            xml = loadXMLDoc("./Data/items.xml");
-            xsl = loadXMLDoc("./Styles/items.xsl");
+        //this needs to be async
+        function displayTemplate(type, id){
+            xml = loadXMLDoc("./Data/"+type+".xml");
+            xsl = loadXMLDoc("./Styles/"+type+".xsl");
             // code for IE
             if (window.ActiveXObject || xhttp.responseType == "msxml-document") {
                 ex = xml.transformNode(xsl);
-                document.getElementById("example").innerHTML = ex;
+                document.getElementById(id).innerHTML = ex;
             }
             // code for Chrome, Firefox, Opera, etc.
             else if (document.implementation && document.implementation.createDocument) {
                 xsltProcessor = new XSLTProcessor();
                 xsltProcessor.importStylesheet(xsl);
                 resultDocument = xsltProcessor.transformToFragment(xml, document);
-                document.getElementById("products").appendChild(resultDocument);
+                document.getElementById(id).appendChild(resultDocument);
             }
+
+        }
+
+        function displayResult() {
+            displayTemplate("catalog", "navigation");
+            displayTemplate("items", "products");
+        }
+        function clickCategory(el){
+            console.log(el);
+            $('#categoryName').html(el.attributes["data-categoryName"].value);
+            //hide all products
+            window.productContainer = $("div#products");
+            window.products = $("div#products div.product");
+            window.products.hide();
+            
+            var query = "products#"+el.attributes["data-categoryid"].value+" item";
+            
+            $(query).each(function(i,el){
+                var $product = window.products.filter('[productid="'+el.innerHTML+'"]');
+                $product.show();
+                //console.log($product.html())
+                //need to move bottom so they are in the write order
+                $product.appendTo(window.productContainer);
+            });
+
         }
     </script>
 </head>
 
-<body onload="displayResult()">
+<body onload="">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navigation"></nav>
+    </div>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
     <div class="container">
-        <h3 class="h3">shopping Demo-1 </h3>
+        <h3 class="h3" id="categoryName">Home </h3>
         <div class="row" id="products" />
     </div>
 </body>
-
+<script>
+    displayResult();
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </html>

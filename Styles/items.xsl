@@ -3,7 +3,7 @@
 <xsl:template match="/">
     <xsl:for-each select="Inventory/Style">
     
-  <div class="col-md-3 col-sm-6">
+  <div class="col-md-3 col-sm-6 product">
       <xsl:variable name="minPrice" select="(Item)[1]/@RegPrice"/>
       <xsl:variable name="minSalePrice" select="(Item)[1]/@SalePrice"/>
       <xsl:variable name="diff" select="$minPrice - $minSalePrice"/>
