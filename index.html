@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"/>
+    <link href="./css/style.css" rel="stylesheet" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        function loadXMLDoc(filename) {
+            if (window.ActiveXObject) {
+                xhttp = new ActiveXObject("Msxml2.XMLHTTP");
+            }
+            else {
+                xhttp = new XMLHttpRequest();
+            }
+            xhttp.open("GET", filename, false);
+            try { xhttp.responseType = "msxml-document" } catch (err) { } // Helping IE11
+            xhttp.send("");
+            return xhttp.responseXML;
+        }
+
+        function displayResult() {
+            xml = loadXMLDoc("./Data/items.xml");
+            xsl = loadXMLDoc("./Styles/items.xsl");
+            // code for IE
+            if (window.ActiveXObject || xhttp.responseType == "msxml-document") {
+                ex = xml.transformNode(xsl);
+                document.getElementById("example").innerHTML = ex;
+            }
+            // code for Chrome, Firefox, Opera, etc.
+            else if (document.implementation && document.implementation.createDocument) {
+                xsltProcessor = new XSLTProcessor();
+                xsltProcessor.importStylesheet(xsl);
+                resultDocument = xsltProcessor.transformToFragment(xml, document);
+                document.getElementById("products").appendChild(resultDocument);
+            }
+        }
+    </script>
+</head>
+
+<body onload="displayResult()">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <div class="container">
+        <h3 class="h3">shopping Demo-1 </h3>
+        <div class="row" id="products" />
+    </div>
+</body>
+
+</html>
